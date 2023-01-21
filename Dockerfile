@@ -7,4 +7,4 @@ COPY include include
 COPY src src
 COPY tests tests
 
-RUN make
+ENTRYPOINT make
