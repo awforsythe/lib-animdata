@@ -91,3 +91,43 @@ const char* test_curve_find_inclusive_range()
 
 	return nullptr;
 }
+
+const char* test_curve_set()
+{
+	ad_curve curve(1);
+	const bool init_ok = curve.init(8);
+	t_assert(init_ok);
+	float v;
+
+	v = 0.0f; curve.set(0.0f, &v);
+	t_assert(curve.num_keys == 1);
+	t_assert_floats(curve.times.data, 0.0f);
+	t_assert_floats(curve.values.data, 0.0f);
+
+	v = 1.0f; curve.set(1.0f, &v);
+	t_assert(curve.num_keys == 2);
+	t_assert_floats(curve.times.data, 0.0f, 1.0f);
+	t_assert_floats(curve.values.data, 0.0f, 1.0f);
+
+	v = 10.0f; curve.set(2.0f, &v);
+	t_assert(curve.num_keys == 3);
+	t_assert_floats(curve.times.data, 0.0f, 1.0f, 2.0f);
+	t_assert_floats(curve.values.data, 0.0f, 1.0f, 10.0f);
+
+	v = 5.0f; curve.set(1.5f, &v);
+	t_assert(curve.num_keys == 4);
+	t_assert_floats(curve.times.data, 0.0f, 1.0f, 1.5f, 2.0f);
+	t_assert_floats(curve.values.data, 0.0f, 1.0f, 5.0f, 10.0f);
+
+	v = 999.9f; curve.set(1.0f, &v);
+	t_assert(curve.num_keys == 4);
+	t_assert_floats(curve.times.data, 0.0f, 1.0f, 1.5f, 2.0f);
+	t_assert_floats(curve.values.data, 0.0f, 999.9f, 5.0f, 10.0f);
+
+	v = 42.0f; curve.set(-50.0f, &v);
+	t_assert(curve.num_keys == 5);
+	t_assert_floats(curve.times.data, -50.0f, 0.0f, 1.0f, 1.5f, 2.0f);
+	t_assert_floats(curve.values.data, 42.0f, 0.0f, 999.9f, 5.0f, 10.0f);
+
+	return nullptr;
+}

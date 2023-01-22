@@ -16,7 +16,7 @@ struct ad_curve
 	ad_curve(size_t in_cardinality);
 
 	bool init(size_t initial_capacity);
-    bool set(float time, float* value);
+    void set(float time, float* value);
 	void shift(float from_time, float to_time, float delta_time);
 
 	int32_t find_nearest_lte(float at_time) const;

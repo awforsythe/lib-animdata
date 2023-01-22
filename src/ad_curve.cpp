@@ -18,6 +18,27 @@ bool ad_curve::init(size_t initial_capacity)
 	return times.init(initial_capacity) && values.init(initial_capacity * cardinality);
 }
 
+void ad_curve::set(float time, float* value)
+{
+	const int32_t i = find_nearest_lte(time);
+	const bool is_exact = i >= 0 ? times.data[i] == time : false;
+	if (is_exact)
+	{
+		const int32_t values_i = i * cardinality;
+		memcpy(values.data + values_i, value, sizeof(float) * cardinality);
+	}
+	else
+	{
+		const int32_t times_i = i + 1;
+		const int32_t values_i = times_i * cardinality;
+		float* time_ptr = times.resize_for_edit(times_i, 1);
+		float* value_ptr = values.resize_for_edit(values_i, cardinality);
+		*time_ptr = time;
+		memcpy(value_ptr, value, sizeof(float) * cardinality);
+		num_keys++;
+	}
+}
+
 void ad_curve::shift(float from_time, float to_time, float delta_time)
 {
 	int32_t n = 0;

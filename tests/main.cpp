@@ -22,6 +22,7 @@ int main(void)
 	t_run(test_curve_init);
 	t_run(test_curve_find_nearest_lte);
 	t_run(test_curve_find_inclusive_range);
+	t_run(test_curve_set);
 
 	t_end();
 }
