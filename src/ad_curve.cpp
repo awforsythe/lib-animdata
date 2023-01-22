@@ -45,20 +45,8 @@ void ad_curve::remove_at(float time)
 	const bool is_exact = i >= 0 ? times.data[i] == time : false;
 	if (is_exact)
 	{
-		if (i < num_keys - 1)
-		{
-			const int32_t dst_times_i = i;
-			const int32_t src_times_i = i + 1;
-			const int32_t dst_values_i = dst_times_i * cardinality;
-			const int32_t src_values_i = src_times_i * cardinality;
-
-			const size_t num_time_bytes_to_shift = (num_keys - src_times_i) * sizeof(float);
-			const size_t num_value_bytes_to_shift = num_time_bytes_to_shift * cardinality;
-			memmove(times.data + dst_times_i, times.data + src_times_i, num_time_bytes_to_shift);
-			memmove(values.data + dst_values_i, values.data + src_values_i, num_value_bytes_to_shift);
-		}
-		times.size--;
-		values.size -= cardinality;
+		times.resize_for_edit(i, -1);
+		values.resize_for_edit(i, -1);
 		num_keys--;
 	}
 }
