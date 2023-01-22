@@ -126,8 +126,54 @@ const char* test_curve_set()
 
 	v = 42.0f; curve.set(-50.0f, &v);
 	t_assert(curve.num_keys == 5);
+	t_assert(curve.times.size == 5);
+	t_assert(curve.values.size == 5);
 	t_assert_floats(curve.times.data, -50.0f, 0.0f, 1.0f, 1.5f, 2.0f);
 	t_assert_floats(curve.values.data, 42.0f, 0.0f, 999.9f, 5.0f, 10.0f);
+
+	return nullptr;
+}
+
+const char* test_curve_remove_at()
+{
+	ad_curve curve(1);
+	const bool init_ok = curve.init(8);
+	t_assert(init_ok);
+
+	curve.num_keys = 5;
+	curve.times.size = curve.values.size = 5;
+	curve.times.data[0] = curve.values.data[0] = 0.0f;
+	curve.times.data[1] = curve.values.data[1] = 1.0f;
+	curve.times.data[2] = curve.values.data[2] = 2.0f;
+	curve.times.data[3] = curve.values.data[3] = 3.0f;
+	curve.times.data[4] = curve.values.data[4] = 4.0f;
+
+	curve.remove_at(1.5f);
+	t_assert(curve.num_keys == 5);
+	t_assert_floats(curve.times.data, 0.0f, 1.0f, 2.0f, 3.0f, 4.0f);
+	t_assert_floats(curve.values.data, 0.0f, 1.0f, 2.0f, 3.0f, 4.0f);
+
+	curve.remove_at(4.0f);
+	t_assert(curve.num_keys == 4);
+	t_assert_floats(curve.times.data, 0.0f, 1.0f, 2.0f, 3.0f);
+	t_assert_floats(curve.values.data, 0.0f, 1.0f, 2.0f, 3.0f);
+
+	curve.remove_at(1.0f);
+	t_assert(curve.num_keys == 3);
+	t_assert_floats(curve.times.data, 0.0f, 2.0f, 3.0f);
+	t_assert_floats(curve.values.data, 0.0f, 2.0f, 3.0f);
+
+	curve.remove_at(-55.0f);
+	t_assert(curve.num_keys == 3);
+	t_assert_floats(curve.times.data, 0.0f, 2.0f, 3.0f);
+	t_assert_floats(curve.values.data, 0.0f, 2.0f, 3.0f);
+
+	curve.remove_at(0.0f);
+	t_assert(curve.num_keys == 2);
+	t_assert(curve.times.size == 2);
+	t_assert(curve.values.size == 2);
+	t_assert_floats(curve.times.data, 2.0f, 3.0f);
+	t_assert_floats(curve.values.data, 2.0f, 3.0f);
 
 	return nullptr;
 }
