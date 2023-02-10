@@ -1,10 +1,10 @@
 FROM gcc:9.5
 
-WORKDIR /usr/src/app
+WORKDIR /build
 
 COPY Makefile .
 COPY include include
 COPY src src
 COPY tests tests
 
-ENTRYPOINT make
+CMD ["make", "test"]

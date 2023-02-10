@@ -3,11 +3,14 @@ on:
   push: {}
 
 jobs:
-  build:
+  # Build a native Linux static library, then build and run the test binary to verify
+  # that the changes are good to release
+  test:
     name: Build and test
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout
+      uses: actions/checkout@v3
 
     - name: Build static lib
       run: make lib/libanimdata.a
@@ -17,3 +20,18 @@ jobs:
 
     - name: Run tests
       run: make test
+
+  # Once tests pass, generate a WebAssembly module using Emscripten
+  wasm:
+    name: Build WebAssembly module
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Set up Emscripten SDK
+      uses: mymindstorm/setup-emsdk@v11
+
+    - name: Build wasm
+      run: make wasm
