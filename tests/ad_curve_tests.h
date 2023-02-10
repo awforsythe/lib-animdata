@@ -177,3 +177,55 @@ const char* test_curve_remove_at()
 
 	return nullptr;
 }
+
+const char* test_curve_evaluate()
+{
+	// Test a curve of 2D values with an initial capacity of 8
+	ad_curve curve(2);
+	const bool init_ok = curve.init(8);
+	t_assert(init_ok);
+	t_assert(curve.cardinality == 2);
+	t_assert(curve.times.capacity == 8);
+	t_assert(curve.values.capacity == 16);
+
+	// Evaluating an empty curve should return false and leave the output buffer unchagned
+	float r[2] = { -1.0f, -2.0f };
+	t_assert(!curve.evaluate(0.0f, r));
+	t_assert_floats(r, -1.0f, -2.0f);
+
+	// Add an initial key at 0.0f, and check 2D curve size assumptions while we're at it
+	float w[2];
+	w[0] = 100.0f; w[1] = 200.0f; curve.set(0.0f, w);
+	t_assert(curve.num_keys == 1);
+	t_assert(curve.times.size == 1);
+	t_assert(curve.values.size == 2);
+
+	// Populate a linear series of values, giving us 5 total keys
+	w[0] = 101.0f; w[1] = 202.0f; curve.set(1.0f, w);
+	w[0] = 102.0f; w[1] = 204.0f; curve.set(2.0f, w);
+	w[0] = 103.0f; w[1] = 206.0f; curve.set(3.0f, w);
+	w[0] = 104.0f; w[1] = 208.0f; curve.set(4.0f, w);
+	t_assert(curve.num_keys == 5);
+	t_assert(curve.times.size == 5);
+	t_assert(curve.values.size == 10);
+
+	// Evaluating before the first key should return the first key's value
+	t_assert(curve.evaluate(-1000.0f, r));
+	t_assert_floats(r, 100.0f, 200.0f);
+
+	// Evaluating after the last key should return the last key's value
+	t_assert(curve.evaluate(1000.0f, r));
+	t_assert_floats(r, 104.0f, 208.0f);
+
+	// Evaluating at the precise time of a specific key should return its value
+	t_assert(curve.evaluate(0.0f, r)); t_assert_floats(r, 100.0f, 200.0f);
+	t_assert(curve.evaluate(1.0f, r)); t_assert_floats(r, 101.0f, 202.0f);
+	t_assert(curve.evaluate(2.0f, r)); t_assert_floats(r, 102.0f, 204.0f);
+	t_assert(curve.evaluate(3.0f, r)); t_assert_floats(r, 103.0f, 206.0f);
+	t_assert(curve.evaluate(4.0f, r)); t_assert_floats(r, 104.0f, 208.0f);
+
+	// Evaluating between keys should use constant interpolation (left key's value)
+	t_assert(curve.evaluate(1.5f, r)); t_assert_floats(r, 101.0f, 202.0f);
+
+	return nullptr;
+}

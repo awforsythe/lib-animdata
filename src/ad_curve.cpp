@@ -51,6 +51,26 @@ void ad_curve::remove_at(float time)
 	}
 }
 
+bool ad_curve::evaluate(float time, float* out_value) const
+{
+	const int32_t times_i = find_nearest_lte(time);
+	if (times_i >= 0)
+	{
+		const int32_t values_i = times_i * cardinality;
+		memcpy(out_value, values.data + values_i, sizeof(float) * cardinality);
+		return true;
+	}
+
+	if (values.size > 0)
+	{
+		const int32_t values_i = 0;
+		memcpy(out_value, values.data + values_i, sizeof(float) * cardinality);
+		return true;
+	}
+
+	return false;
+}
+
 int32_t ad_curve::find_nearest_lte(float at_time) const
 {
 	// Use -1 as a sentinel if there are no keys <= the search time
