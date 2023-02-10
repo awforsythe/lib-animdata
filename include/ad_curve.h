@@ -18,7 +18,6 @@ struct ad_curve
 	bool init(size_t initial_capacity);
     void set(float time, float* value);
 	void remove_at(float time);
-	void shift(float from_time, float to_time, float delta_time);
 
 	int32_t find_nearest_lte(float at_time) const;
 	int32_t find_inclusive_range(float from_time, float to_time, int32_t& out_n) const;

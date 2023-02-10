@@ -51,12 +51,6 @@ void ad_curve::remove_at(float time)
 	}
 }
 
-void ad_curve::shift(float from_time, float to_time, float delta_time)
-{
-	int32_t n = 0;
-	int32_t from_i = find_inclusive_range(from_time, to_time, n);
-}
-
 int32_t ad_curve::find_nearest_lte(float at_time) const
 {
 	// Use -1 as a sentinel if there are no keys <= the search time
