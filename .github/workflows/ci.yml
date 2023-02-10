@@ -13,7 +13,7 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Build static lib
-      run: make lib/libanimdata.a
+      run: make lib/x64/libanimdata.a
 
     - name: Build test binary
       run: make bin/test
