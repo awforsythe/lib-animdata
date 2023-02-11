@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>lib-animdata test</title>
+  </head>
+  <body>
+    <h1>lib-animdata test</h1>
+    <ul>
+      <li id="status">Loading...</li>
+    </ul>
+    <script src="lib/wasm/libanimdata.js"></script>
+    <script>
+      Module.onRuntimeInitialized = () => {
+        const statusLi = document.getElementById('status');
+        const ad_example_func = Module.cwrap('ad_example_func', 'number', ['number']);
+        statusLi.innerText = `ad_example_func(2) = ${ad_example_func(2)}`
+      };
+    </script>
+  </body>
+</html>
