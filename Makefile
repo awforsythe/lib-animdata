@@ -27,7 +27,7 @@ $(LIB_X64): $(OBJS_X64)
 
 $(LIB_WASM): $(OBJS_WASM)
 	@mkdir -p $(dir $(LIB_WASM))
-	emcc $(OBJS_WASM) -sEXPORTED_RUNTIME_METHODS=cwrap -o $(LIB_WASM)
+	emcc -lembind $(OBJS_WASM) -sEXPORTED_RUNTIME_METHODS=cwrap -o $(LIB_WASM)
 
 # We can build bin/test from the source in tests/, linking against the lib
 TESTSRCS=$(wildcard tests/*.h)

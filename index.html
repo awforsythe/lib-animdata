@@ -14,6 +14,11 @@
         const statusLi = document.getElementById('status');
         const ad_example_func = Module.cwrap('ad_example_func', 'number', ['number']);
         statusLi.innerText = `ad_example_func(2) = ${ad_example_func(2)}`
+
+        const buf = new Module.ad_buffer();
+        const initOK = buf.init(8);
+        console.log(initOK);
+        console.log(buf.capacity);
       };
     </script>
   </body>
