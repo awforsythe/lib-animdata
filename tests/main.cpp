@@ -3,6 +3,7 @@
 #include "testing.h"
 #include "ad_buffer_tests.h"
 #include "ad_curve_tests.h"
+#include "ad_input_recorder_tests.h"
 
 int main(void)
 {
@@ -25,6 +26,10 @@ int main(void)
 	t_run(test_curve_set);
 	t_run(test_curve_remove_at);
 	t_run(test_curve_evaluate);
+
+	t_run(test_input_recorder_init);
+	t_run(test_input_recorder_chunks);
+	t_run(test_input_recorder_constant_value);
 
 	t_end();
 }
